@@ -1,0 +1,137 @@
+import java.io.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javafx.application.*;
+import javafx.event.*;
+import javafx.geometry.Pos;
+import javafx.scene.*;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.*;
+import javafx.scene.text.*;
+import javafx.stage.*;
+
+public class CustomerInput extends Application  {
+
+    private Stage primaryStage;
+    private Text statusText, resultText;
+    private Button uploadButton;
+
+    private final static Font RESULT_FONT = Font.font("Helvetica", 16);
+    private final static Font INPUT_FONT = Font.font("Helvetica", 20);
+
+    @Override
+    public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+
+        VBox primaryBox = new VBox();
+        primaryBox.setAlignment(Pos.CENTER);
+        primaryBox.setSpacing(20);
+        primaryBox.setStyle("-fx-background-color: white");
+
+        VBox uploadBox = new VBox();
+        uploadBox.setAlignment(Pos.CENTER);
+        uploadBox.setSpacing(20);
+        Text uploadLabel = new Text("Upload a comma-separated file with customer data.");
+        uploadLabel.setFont(INPUT_FONT);
+        uploadButton = new Button("Upload data");
+        uploadButton.setOnAction(this::processDataUpload);
+	       
+        uploadBox.getChildren().add(uploadLabel);
+        uploadBox.getChildren().add(uploadButton);
+        primaryBox.getChildren().add(uploadBox);
+        
+
+        VBox resultsBox = new VBox();
+        resultsBox.setAlignment(Pos.CENTER);
+        resultsBox.setSpacing(20);
+        statusText = new Text("");
+        statusText.setVisible(false);
+        statusText.setFont(RESULT_FONT);
+        statusText.setFill(Color.BLUE);
+        resultText = new Text("");
+        resultText.setVisible(false);
+        resultText.setFont(RESULT_FONT);
+        resultsBox.getChildren().add(statusText);
+        resultsBox.getChildren().add(resultText);
+        primaryBox.getChildren().add(resultsBox);
+
+        Scene scene = new Scene(primaryBox, 475, 200, Color.TRANSPARENT);
+        primaryStage.setTitle("Customer Data Upload");
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
+    }
+
+    private void processDataUpload(ActionEvent event){
+        statusText.setVisible(false);
+        resultText.setVisible(false);
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showOpenDialog(primaryStage);
+        parseFile(file);
+
+    }
+
+    private void parseFile(File file) {
+    	int totalnum=0;
+    	int statusnum=0;
+    	ArrayList<Customer> userList = new ArrayList<>();  
+    	Scanner fileScan = null;
+        try {
+    	    fileScan = new Scanner(new FileReader(file));
+        	
+    	    while(fileScan.hasNext()) {
+			   String oneLine = fileScan.nextLine();
+			   Scanner lineScan = new Scanner(oneLine);
+			   lineScan.useDelimiter(",");
+		
+			   String id=lineScan.next();
+			   
+			   String numberOfOrders=lineScan.next();
+			   int number=Integer.parseInt(numberOfOrders);
+		       totalnum=totalnum+number;
+		       
+		       if (!id.contains("@"))
+			   {
+			       Customer customer=new Customer(id, number);
+			       userList.add(customer);
+			       statusnum++;
+		       }else
+		       {
+		    	   throw new InvalidCharacterException();
+		       }
+    	   }
+    	    
+    	    String outnum=Integer.toString(totalnum);
+			 uploadButton.setDisable(true);
+		        
+			 statusText.setVisible(true);
+		     resultText.setVisible(true);
+			 statusText.setText("upload successful " + statusnum + " customers" );
+			 resultText.setText("There are total " + outnum + " orders");	
+			 
+        }catch (InvalidCharacterException ex) {
+			statusText.setVisible(true);
+			statusText.setText("Invalid Character, Try again");
+		}catch (NumberFormatException ex) {
+			statusText.setVisible(true);
+			statusText.setText("The number of orders in the data file is not integer data");
+	    }catch (IOException e) {
+		   System.out.println("Error reading the file");
+		}finally {
+			if(fileScan!=null) {
+				fileScan.close();
+	        }
+	   }
+			
+    }
+
+    public static void main(String[] args)  {
+        launch(args);
+    }
+
+}
