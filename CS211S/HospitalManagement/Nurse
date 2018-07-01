@@ -1,0 +1,49 @@
+/** subclass Nurse which define a nurse, including the name, age, gender 
+ * inherit from super class People
+ * and it's subclass variable onDuty  
+ * 
+ */
+
+package week1;
+
+public class Nurse extends People{
+	private boolean onDuty;
+
+	//constructor
+	public Nurse(String lastName, String firstName, int age, String genda,boolean onDuty) {
+		super(lastName,firstName,age,genda);
+		this.onDuty=onDuty;
+	}
+	
+	public boolean getOnduty() {
+		return onDuty;
+	}
+	
+	public void setOnduty(boolean onduty) {
+		this.onDuty=onduty;
+	}
+	
+	//this override superclass method toString
+	@Override
+	public String toString() {
+		return "Nurse " + super.getFullName() + " is on duty " + getOnduty();
+	}
+	
+	//this override superclass method equals
+	@Override
+	public boolean equals(Object o) {
+		if(! super.equals(o)) {
+			return false;
+		}
+		if(o instanceof Nurse) {
+			Nurse other=(Nurse) o;
+			if(onDuty==other.onDuty)
+				return true;
+		}
+		return false;
+	}
+	
+	public void printOndutyNurse() {
+		System.out.println(super.getFullName() + " is on duty today");
+	}
+}
