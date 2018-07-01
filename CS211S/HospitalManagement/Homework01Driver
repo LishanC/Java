@@ -1,0 +1,48 @@
+package week1;
+
+import java.util.ArrayList;
+
+public class Homework01Driver {
+	public static void main(String[] args) {
+		ArrayList<People> list=new ArrayList<>();
+		People d1=new Doctor("Michael", "Nelson", 45, "male", "family doctor");
+		People d2=new Doctor("Chen", "Lily", 20,  "Female", "urologist");
+		People d3=new Doctor("Chan", "Sammie", 20,  "Female", "urologist");
+		People pa1=new Patient("woo", "Jackie", 34, "male", 002, "sick", "05-26-2015");
+		People pa2=new Patient("KK", "Liang", 30, "male", 004, "regular check", "09-12-2016");
+		People n1=new Nurse("Nancy", "Tayler", 28, "female" , true);
+		People n2=new Nurse("Raymond", "Shi", 29, "male" , false);
+		
+		//fill with several different child objects to the list 
+		list.add(d1);
+		list.add(d2);
+		list.add(pa1);
+		list.add(pa2);
+		list.add(n1);
+		list.add(n2);
+        
+		////check the method in Doctor class to add patient and print the patiet list of the doctor
+		((Doctor) d1).addPatients((Patient)pa1);
+		((Doctor) d1).addPatients((Patient)pa2);
+		((Doctor) d1).printPatientList();
+		
+		System.out.println();
+		//check the subclass Doctor method getSpeciality which only exists in child class
+		System.out.println(d1.getFullName() + " is " + ((Doctor) d1).getSpeciality());
+		
+		//check the subclass Patient method getStatus which only exists in child class
+		System.out.println(pa2.getFullName() + " is " + ((Patient) pa1).getStatus());
+		     
+                //check superclass equals method
+		System.out.println(pa2.equals(pa1));
+        
+                //check subclass Doctor equals method which is overriden
+		System.out.println(d2.equals(d3));
+		d2.setLastName("Chan");
+                System.out.println(d2.equals(d3));
+        
+               //check subclass toString method which is overriden
+               System.out.println(pa1.toString());
+	}
+
+}
