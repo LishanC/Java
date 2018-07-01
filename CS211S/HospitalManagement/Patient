@@ -1,0 +1,68 @@
+/** subclass Patient which define a patient, including the name, age, gender 
+ * inherit from super class People
+ * and it's subclass variable status and date  
+ * 
+ */
+
+package week1;
+
+public class Patient extends People {
+	private int ID;
+	private String status;
+	private String date ;
+	
+	//constructor
+	public Patient(String lastName, String firstName, int age, String genda, int ID, String status, String date) {
+		super(lastName,firstName,age,genda);
+		this.ID=ID;
+		this.status=status;
+		this.date=date;
+	}
+	
+	public int getID() {
+		return this.ID;
+	}
+	public void setID(int ID) {
+		this.ID=ID;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	
+	public void setStatus(String status) {
+		this.status=status;
+	}
+	public String getDate() {
+		return date;
+	}
+	
+	public void setDdate(String date) {
+		this.date=date;
+	}
+	//this override the superclass method toString
+	@Override
+	public String toString() {
+		return super.toString() + " " + getStatus() + " in " + getDate();
+	}
+	
+	//this override the superclass method equals
+	@Override
+	public boolean equals(Object o) {
+		if(! super.equals(o)) {
+			return false;
+		}
+		if(o instanceof Patient) {
+			Patient other=(Patient) o;
+			if(ID==other.ID && status.equals(other.status) && date.equals(other.date)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void printReadyPatient() {
+		System.out.println("patient " + super.getLastName() + " is ready ");
+	}
+
+}
